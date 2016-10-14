@@ -5,6 +5,10 @@ using MB.Algodat;
 
 namespace RangeTreeExamples
 {
+
+
+
+
     /// <summary>
     /// A simple example cass, which contains an integer range
     /// and a text property.
