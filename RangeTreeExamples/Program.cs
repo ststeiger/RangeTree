@@ -83,6 +83,15 @@ namespace RangeTreeExamples
             int position = RangeGroups.Count / 2;
             int stepSize = position / 2;
 
+            /*
+            1-10
+            11-20
+            21-30
+            31-40
+            41-50
+
+            5 ==> position = 2.5 = 2 ==> stepsize = 1
+                */
             while (true)
             {
                 if (stepSize == 0)
