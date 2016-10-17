@@ -1,7 +1,10 @@
 ﻿
 using System.Runtime.CompilerServices;
 
-
+// Modified version of code from 
+// https://github.com/somdoron/NaCl.net/blob/master/nacl.net/UInt128.cs
+// Mozilla Public License, version 2.0
+// https://github.com/somdoron/NaCl.net/blob/master/LICENSE.md
 namespace MB.Algodat
 {
 
@@ -78,28 +81,6 @@ namespace MB.Algodat
             sb = null;
             return s;
         }
-
-
-        //int print_uint128(UInt128 n) {
-        //    char[] foo = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
-        //    UInt128 zero = new UInt128(0);
-        //    UInt128 ten = new UInt128(10);
-
-        //    string s = "";
-        //    if (n == zero) return printf("0\n");
-
-        //  //char str[40] = {0}; // log10(1 << 128) + '\0'
-        //  //char *s = str + sizeof(str) - 1; // start at the end
-
-        //    while (n != zero)
-        //    {
-        //        s += foo[n % 10];
-        //        //*--s = foo[n % 10]; // save last digit
-        //        n = n / ten;
-        //  }
-        //  return printf("%s\n", s);
-        //}
 
 
         public bool Equals(UInt128 other)
