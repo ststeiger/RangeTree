@@ -6,7 +6,10 @@ namespace MB.Algodat
 {
 
 
-    public struct UInt128 : System.IComparable, System.IComparable<UInt128>, System.Collections.Generic.IComparer<UInt128>
+    public struct UInt128 
+        : System.IComparable
+        , System.IComparable<UInt128>
+        , System.Collections.Generic.IComparer<UInt128>
     {
 
         public int Compare(UInt128 x, UInt128 y)
@@ -20,7 +23,7 @@ namespace MB.Algodat
         public int CompareTo(object obj)
         {
             if (obj == null)
-                return -1;
+                return 1; // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
 
             System.Type t = obj.GetType();
 
@@ -30,9 +33,16 @@ namespace MB.Algodat
                 return this.Compare(this, ui);
             }
 
-            ulong num = (ulong)(obj);
-            UInt128 ui2 = new UInt128(0, num);
-            return this.Compare(this, ui2);
+
+            if (object.ReferenceEquals(t, typeof(System.DBNull)))
+                return 1;
+
+            ulong? lowerPart = obj as ulong?;
+            if (!lowerPart.HasValue)
+                return 1;
+
+            UInt128 compareTarget = new UInt128(0, lowerPart.Value);
+            return this.Compare(this, compareTarget);
         }
 
 
@@ -41,8 +51,6 @@ namespace MB.Algodat
             if (this >  other) return -1;
             if (this == other) return 0;
             return 1;
-
-            return 0;
         }
 
 
