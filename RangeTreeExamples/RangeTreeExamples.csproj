@@ -90,6 +90,7 @@
     <Compile Include="RangeItem.cs" />
     <Compile Include="MyRangeItemComparer.cs" />
     <Compile Include="RangeItemComparer.cs" />
+    <Compile Include="SimpleBinaryTreeExample.cs" />
     <Compile Include="UInt128Range.cs" />
     <Compile Include="UInt128ItemComparer.cs" />
   </ItemGroup>

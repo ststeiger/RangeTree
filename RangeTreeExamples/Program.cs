@@ -38,94 +38,14 @@ using System.Diagnostics;
 namespace RangeTreeExamples
 {
 
-    // http://stackoverflow.com/questions/11868837/fastest-way-to-search-a-number-in-a-list-of-ranges
-    public class RangeGroup
-    {
-        public uint RangeGroupId { get; set; }
-        public uint Low { get; set; }
-        public uint High { get; set; }
-        // More properties related with the range here
-    }
 
-
-
-    public class RangeGroupFinder
-    {
-        private static readonly List<RangeGroup> RangeGroups = new List<RangeGroup>();
-
-        static RangeGroupFinder()
-        {
-            // Populating the list items here
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023238144, High = 1023246335 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023246336, High = 1023279103 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023279104, High = 1023311871 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023311872, High = 1023328255 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023328256, High = 1023344639 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023344640, High = 1023410175 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023410176, High = 1023672319 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023672320, High = 1023688703 });
-            RangeGroups.Add(new RangeGroup { RangeGroupId = 0, Low = 1023692800, High = 1023696895 });
-            // There are many more and the groups are not sequential as it can seen on last 2 groups
-        }
-
-        public static RangeGroup Find(uint number)
-        {
-            return RangeGroups.FirstOrDefault(rg => number >= rg.Low && number <= rg.High);
-        }
-    }
 
     class Program
     {
-        public static RangeGroup Find(uint number)
-        {
-            //RangeGroup[] RangeGroups = null;
-            List<RangeGroup> RangeGroups = null;
-
-            int position = RangeGroups.Count / 2;
-            int stepSize = position / 2;
-
-            /*
-            1-10
-            11-20
-            21-30
-            31-40
-            41-50
-
-            5 ==> position = 2.5 = 2 ==> stepsize = 1
-                */
-            while (true)
-            {
-                if (stepSize == 0)
-                {
-                    // Couldn't find it.
-                    return null;
-                }
-
-                if (RangeGroups[position].High < number)
-                {
-                    // Search down.
-                    position -= stepSize;
-
-                }
-                else if (RangeGroups[position].Low > number)
-                {
-                    // Search up.
-                    position += stepSize;
-
-                }
-                else
-                {
-                    // Found it!
-                    return RangeGroups[position];
-                }
-
-                stepSize /= 2;
-            }
-        }
-
 
         static void Main(string[] args)
         {
+            SimpleBinaryTreeExample.Test();
             TreeExample1();
             TreeExample2();
             TreeExample3();
@@ -235,6 +155,29 @@ namespace RangeTreeExamples
             System.Net.IPAddress address = new System.Net.IPAddress(addrBytes);
             return address;
         } // End Function Int128ToIpAddress 
+
+
+        // https://github.com/abh/geodns
+        // http://mkaczanowski.com/golang-build-dynamic-dns-service-go/
+        // https://pcapdotnet.svn.codeplex.com/svn/PcapDotNet/src/PcapDotNet.Base/
+        // http://stackoverflow.com/questions/2928327/converting-an-ip-address-to-a-number
+        public void SqlSearch()
+        {
+            string SQL = @"SELECT * FROM T_Country_IP_Range 
+WHERE 
+(
+    block_from_upper < @in_IP_upper 
+    OR 
+    (block_from_upper = @in_IP_upper AND block_from_lower <= @in_IP_lower)
+) 
+AND 
+(
+    block_to_upper > @in_IP_upper 
+    OR 
+    (block_to_upper = @in_IP_upper AND block_to_lower >= @in_IP_lower)
+);
+";
+        }
 
 
         static void TreeExample1()
