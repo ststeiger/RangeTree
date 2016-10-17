@@ -2,12 +2,50 @@
 using System.Runtime.CompilerServices;
 
 
-namespace RangeTree
+namespace MB.Algodat
 {
 
 
-    public struct UInt128
+    public struct UInt128 : System.IComparable, System.IComparable<UInt128>, System.Collections.Generic.IComparer<UInt128>
     {
+
+        public int Compare(UInt128 x, UInt128 y)
+        {
+            if (x >  y) return -1;
+            if (x == y) return 0;
+            return 1;
+        }
+
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return -1;
+
+            System.Type t = obj.GetType();
+
+            if(object.ReferenceEquals(t, typeof(UInt128)))
+            {
+                UInt128 ui = (UInt128)obj;
+                return this.Compare(this, ui);
+            }
+
+            ulong num = (ulong)(obj);
+            UInt128 ui2 = new UInt128(0, num);
+            return this.Compare(this, ui2);
+        }
+
+
+        public int CompareTo(UInt128 other)
+        {
+            if (this >  other) return -1;
+            if (this == other) return 0;
+            return 1;
+
+            return 0;
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UInt128(System.UInt64 n)
         {
@@ -126,6 +164,86 @@ namespace RangeTree
             High = High + c;
             Low = Low + n;
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator == (UInt128 lhs, UInt128 rhs)
+        {
+            bool status = false;
+            if (lhs.High == rhs.High && lhs.Low == rhs.Low)
+            {
+                status = true;
+            }
+            return status;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(UInt128 lhs, UInt128 rhs)
+        {
+            bool status = false;
+            if (lhs.High != rhs.High || lhs.Low != rhs.Low)
+            {
+                status = true;
+            }
+            return status;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator <(UInt128 lhs, UInt128 rhs)
+        {
+            if (lhs.High < rhs.High)
+                return true;
+
+            if (lhs.High == rhs.High && lhs.Low < rhs.Low)
+                return true;
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator >(UInt128 lhs, UInt128 rhs)
+        {
+            if (lhs.High > rhs.High)
+                return true;
+
+            if (lhs.High == rhs.High && lhs.Low > rhs.Low)
+                return true;
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator <=(UInt128 lhs, UInt128 rhs)
+        {
+            if (lhs.High < rhs.High)
+                return true;
+
+            if (lhs.High == rhs.High)
+            {
+                if(lhs.Low <= rhs.Low)
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator >=(UInt128 lhs, UInt128 rhs)
+        {
+            if (lhs.High > rhs.High)
+                return true;
+
+            if (lhs.High == rhs.High)
+            {
+                if(lhs.Low >= rhs.Low)
+                    return true;
+            }
+
+            return false;
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator *(UInt128 left, System.UInt64 right)
