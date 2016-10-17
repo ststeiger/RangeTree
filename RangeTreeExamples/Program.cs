@@ -160,13 +160,13 @@ namespace RangeTreeExamples
             ulong[] addrWords = new ulong[2];
             if (addrBytes.Length > 8)
             {
-                addrWords[0] = System.BitConverter.ToUInt64(addrBytes, 8); // Low
-                addrWords[1] = System.BitConverter.ToUInt64(addrBytes, 0); // High
+                addrWords[0] = System.BitConverter.ToUInt64(addrBytes, 8); // High
+                addrWords[1] = System.BitConverter.ToUInt64(addrBytes, 0); // Low
             }
             else
             {
-                addrWords[0] = 0; // Low
-                addrWords[1] = System.BitConverter.ToUInt32(addrBytes, 0); // High
+                addrWords[0] = 0; // High
+                addrWords[1] = System.BitConverter.ToUInt32(addrBytes, 0); // Low
             }
 
             // return addrWords;
@@ -247,7 +247,7 @@ namespace RangeTreeExamples
             string ss = number2.ToString();
             System.Console.WriteLine(ss);
             System.Net.IPAddress ipAddress = Int128ToIpAddress(number2);
-
+            System.Console.WriteLine(ipAddress);
 
 
             System.Console.WriteLine("Example 1");
