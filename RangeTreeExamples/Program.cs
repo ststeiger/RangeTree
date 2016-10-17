@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,9 +131,139 @@ namespace RangeTreeExamples
             TreeExample3();
         }
 
+
+
+        // For an IPv4 address, the first element will be 0,
+        /// and the second will be a UInt32 representation of the four bytes.
+        /// For an IPv6 address, the first element will be a UInt64
+        /// representation of the first eight bytes, and the second will be the
+        /// last eight bytes.
+        /// </summary>
+        /// <param name="ipAddress">The IP address to convert.</param>
+        /// <returns></returns>
+        // private static MB.Algodat.UInt128 IpAddressToInt128(string ipAddress)
+        private static MB.Algodat.UInt128 IpAddressToInt128(string ipAddress)
+        {
+            System.Net.IPAddress ipa = System.Net.IPAddress.Parse(ipAddress);
+            byte[] addrBytes = ipa.GetAddressBytes();
+
+            if (System.BitConverter.IsLittleEndian)
+            {
+                //little-endian machines store multi-byte integers with the
+                //least significant byte first. this is a problem, as integer
+                //values are sent over the network in big-endian mode. reversing
+                //the order of the bytes is a quick way to get the BitConverter
+                //methods to convert the byte arrays in big-endian mode.
+                System.Array.Reverse(addrBytes);
+            }
+
+            ulong[] addrWords = new ulong[2];
+            if (addrBytes.Length > 8)
+            {
+                addrWords[0] = System.BitConverter.ToUInt64(addrBytes, 8); // Low
+                addrWords[1] = System.BitConverter.ToUInt64(addrBytes, 0); // High
+            }
+            else
+            {
+                addrWords[0] = 0; // Low
+                addrWords[1] = System.BitConverter.ToUInt32(addrBytes, 0); // High
+            }
+
+            // return addrWords;
+            return new MB.Algodat.UInt128(addrWords[0], addrWords[1]);
+        }
+
+
+
+        // For an IPv4 address, the first element will be 0,
+        /// and the second will be a UInt32 representation of the four bytes.
+        /// For an IPv6 address, the first element will be a UInt64
+        /// representation of the first eight bytes, and the second will be the
+        /// last eight bytes.
+        /// </summary>
+        /// <param name="ipAddress">The IP address to convert.</param>
+        /// <returns></returns>
+        //private static System.UInt32 IpV4AddressToUInt32(string ipAddress)
+        private static System.UInt32 IpV4AddressToUInt32(string ipAddress)
+        {
+            var ipa = System.Net.IPAddress.Parse(ipAddress);
+            byte[] addrBytes = ipa.GetAddressBytes();
+
+
+            if (addrBytes.Length > 8)
+            {
+                throw new System.ArgumentException("Not an IPv4 address");
+            }
+
+
+            if (System.BitConverter.IsLittleEndian)
+            {
+                // little-endian machines store multi-byte integers with the
+                // least significant byte first. this is a problem, as integer
+                // values are sent over the network in big-endian mode. reversing
+                // the order of the bytes is a quick way to get the BitConverter
+                // methods to convert the byte arrays in big-endian mode.
+                System.Array.Reverse(addrBytes);
+            }
+
+            return System.BitConverter.ToUInt32(addrBytes, 0); // High
+        } // End Function IpV4AddressToUInt32 
+
+
+        public static System.Net.IPAddress Int128ToIpAddress(MB.Algodat.UInt128 ipNumber)
+        {
+            byte[] addrBytes = null;
+
+            if (ipNumber.High == 0 && ipNumber.Low <= System.UInt32.MaxValue) // IPv4
+            {
+                System.UInt32 ui32 = (System.UInt32)ipNumber.Low;
+                addrBytes = System.BitConverter.GetBytes(ui32);
+            }
+            else // IPv6
+            {
+                byte[] highBytes = System.BitConverter.GetBytes(ipNumber.High);
+                byte[] lowBytes = System.BitConverter.GetBytes(ipNumber.Low);
+                addrBytes = new byte[highBytes.Length + lowBytes.Length];
+                // System.Array.Copy(sourceArray, sourceIndex, destinationArray, destIndex, length);
+                System.Array.Copy(lowBytes, 0, addrBytes, 0, 8);
+                System.Array.Copy(highBytes, 0, addrBytes, 8, 8);
+            }
+
+            if (System.BitConverter.IsLittleEndian)
+                System.Array.Reverse(addrBytes);
+            
+            System.Net.IPAddress address = new System.Net.IPAddress(addrBytes);
+            return address;
+        } // End Function Int128ToIpAddress 
+
+
         static void TreeExample1()
         {
-            Console.WriteLine("Example 1");
+            var number2 = IpAddressToInt128("127.0.0.1");
+            number2 = IpAddressToInt128("2001:db8:a0b:12f0::1");
+
+
+            System.Console.WriteLine(number2);
+            string ss = number2.ToString();
+            System.Console.WriteLine(ss);
+            System.Net.IPAddress ipAddress = Int128ToIpAddress(number2);
+
+
+
+            System.Console.WriteLine("Example 1");
+
+            var tree4 = new RangeTree<MB.Algodat.UInt128, UInt128RangeItem>(new UInt128ItemComparer());
+
+            tree4.Add(new UInt128RangeItem(new MB.Algodat.UInt128(0), new MB.Algodat.UInt128(10), "1"));
+            tree4.Add(new UInt128RangeItem(new MB.Algodat.UInt128(20), new MB.Algodat.UInt128(30), "2"));
+            tree4.Add(new UInt128RangeItem(new MB.Algodat.UInt128(15), new MB.Algodat.UInt128(17), "3"));
+            tree4.Add(new UInt128RangeItem(new MB.Algodat.UInt128(25), new MB.Algodat.UInt128(35), "4"));
+
+
+            PrintQueryResult("query 1 (5):", tree4.Query(new MB.Algodat.UInt128(5)));
+            PrintQueryResult("query 2 (10):", tree4.Query(new MB.Algodat.UInt128(10)));
+            PrintQueryResult("query 3 (29):", tree4.Query(new MB.Algodat.UInt128(29)));
+            PrintQueryResult("query 4 (5-15):", tree4.Query(new Range<MB.Algodat.UInt128>(new MB.Algodat.UInt128(5), new MB.Algodat.UInt128(15))));
 
 
 
@@ -142,7 +273,6 @@ namespace RangeTreeExamples
             tree3.Add(new HugeRangeItem(20, 30, "2"));
             tree3.Add(new HugeRangeItem(15, 17, "3"));
             tree3.Add(new HugeRangeItem(25, 35, "4"));
-
 
 
             PrintQueryResult("query 1 (5):", tree3.Query( new System.Numerics.BigInteger(5) ) );
@@ -258,6 +388,14 @@ namespace RangeTreeExamples
 
 
         static void PrintQueryResult(string queryTitle, IEnumerable<HugeRangeItem> result)
+        {
+            Console.WriteLine(queryTitle);
+            foreach (var item in result)
+                Console.WriteLine(item);
+        }
+
+
+        static void PrintQueryResult(string queryTitle, IEnumerable<UInt128RangeItem> result)
         {
             Console.WriteLine(queryTitle);
             foreach (var item in result)

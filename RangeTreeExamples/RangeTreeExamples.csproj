@@ -90,8 +90,8 @@
     <Compile Include="RangeItem.cs" />
     <Compile Include="MyRangeItemComparer.cs" />
     <Compile Include="RangeItemComparer.cs" />
-    <Compile Include="Int128Range.cs" />
-    <Compile Include="RangeItemComparer %28copy%29.cs" />
+    <Compile Include="UInt128Range.cs" />
+    <Compile Include="UInt128ItemComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RangeTree\RangeTree.csproj">

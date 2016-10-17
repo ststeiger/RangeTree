@@ -10,7 +10,118 @@ namespace MB.Algodat
         : System.IComparable
         , System.IComparable<UInt128>
         , System.Collections.Generic.IComparer<UInt128>
+        , System.IEquatable<UInt128>
     {
+
+        // http://stackoverflow.com/questions/11656241/how-to-print-uint128-t-number-using-gcc#answer-11659521
+        public override string ToString()
+        {
+            uint[] buf = new uint[40];
+            ulong ulOne = 1;
+            
+            uint i, j, m = 39;
+            for (i = 64; i-- > 0; )
+            {
+                int usi = (int)i;
+                // UInt128 n = value;
+                // int carry = !!(n & ((UInt128)1 << i));
+                ulong carry = (this.High & (ulOne << usi));
+                carry = carry != 0 ? (ulong)1 : (ulong)0; // ToBool
+                carry = carry == 0 ? (ulong)1 : (ulong)0; // ! 
+                carry = carry == 0 ? (ulong)1 : (ulong)0; // ! 
+
+                for (j = 39; j-- > m + 1 || carry != 0; )
+                {
+                    ulong d = 2 * buf[j] + carry;
+                    carry = d > 9 ? (ulong)1 : (ulong)0;
+                    buf[j] = carry != 0 ? (char)(d - 10) : (char)d;
+                } // Next j 
+                m = j;
+            } // Next i 
+
+            for (i = 64; i-- > 0; )
+            {
+                int usi = (int)i;
+                ulong carry = (this.Low & (ulOne << usi));
+                carry = carry != 0 ? (ulong)1 : (ulong)0; // ToBool
+                carry = carry == 0 ? (ulong)1 : (ulong)0; // ! 
+                carry = carry == 0 ? (ulong)1 : (ulong)0; // ! 
+
+                for (j = 39; j-- > m + 1 || carry != 0; )
+                {
+                    ulong d = 2 * buf[j] + carry;
+                    carry = d > 9 ? (ulong)1 : (ulong)0;
+                    buf[j] = carry != 0 ? (char)(d - 10) : (char)d;
+                } // Next j 
+                m = j;
+            } // Next i 
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            
+            bool hasFirstNonNull = false;
+            for (int k = 0; k < buf.Length - 1; ++k)
+            { 
+                
+                if(hasFirstNonNull || buf[k] != 0)
+                {
+                    hasFirstNonNull = true;
+                    sb.Append(buf[k].ToString());
+                } // End if(hasFirstNonNull || buf[k] != 0)
+
+            } // Next k 
+
+            if (sb.Length == 0)
+                sb.Append('0');
+            
+            string s = sb.ToString();
+            sb.Length = 0;
+            sb = null;
+            return s;
+        }
+
+
+        //int print_uint128(UInt128 n) {
+        //    char[] foo = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
+        //    UInt128 zero = new UInt128(0);
+        //    UInt128 ten = new UInt128(10);
+
+        //    string s = "";
+        //    if (n == zero) return printf("0\n");
+
+        //  //char str[40] = {0}; // log10(1 << 128) + '\0'
+        //  //char *s = str + sizeof(str) - 1; // start at the end
+
+        //    while (n != zero)
+        //    {
+        //        s += foo[n % 10];
+        //        //*--s = foo[n % 10]; // save last digit
+        //        n = n / ten;
+        //  }
+        //  return printf("%s\n", s);
+        //}
+
+
+        public bool Equals(UInt128 other)
+        {
+            return this.High == other.High && this.Low == other.Low;
+        }
+
+        /// <summary>
+        /// Indicates whether this instance and a specified object are equal.
+        /// </summary>
+        /// <returns>
+        /// true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+        /// </returns>
+        /// <param name="obj">Another object to compare to. </param>
+        public override bool Equals(object obj)
+        {
+            if (object.ReferenceEquals(null, obj)) 
+                return false;
+
+            return obj is UInt128 && this.Equals((UInt128)obj);
+        }
+
 
         public int Compare(UInt128 x, UInt128 y)
         {
@@ -48,7 +159,7 @@ namespace MB.Algodat
 
         public int CompareTo(UInt128 other)
         {
-            if (this >  other) return -1;
+            if (other >  this) return -1;
             if (this == other) return 0;
             return 1;
         }
