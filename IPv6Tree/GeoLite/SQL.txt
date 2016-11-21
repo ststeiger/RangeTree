@@ -1,0 +1,42 @@
+
+SELECT 
+	 network 
+	,network::inet 
+
+	-- The essential difference between inet and cidr data types is that 
+	-- inet accepts values with nonzero bits to the right of the netmask, whereas cidr does not.
+	-- Say, if you have a /8 netmask, the 'cidr' type requires that all the 
+	-- 24 rightmost bits are zero. inet does not have this requirement. 
+
+	
+	,host(network::inet) as lower 
+	,host(broadcast(network::inet)) as upper 
+
+	
+	
+	-- http://technobytz.com/ip-address-data-types-postgresql.html
+	--,network::cidr 
+	--,netmask(network::cidr) AS nm  
+	--,~netmask(network::cidr) AS nnm
+	
+	--,host(network::cidr) AS lower 
+	--,host(broadcast(network::cidr)) AS upper -- broadcast: last address in the range
+	--,family(network::cidr) as fam  -- IPv4, IPv6
+	--,masklen(network::cidr) as masklen
+	--,set_masklen(network::inet , masklen(network::inet )+1) AS lower
+-- FROM geoip.geoip_blocks_temp LIMIT 10 
+FROM 
+(
+          SELECT CAST('192.168.1.1/32' AS varchar(100)) as network 
+    UNION SELECT CAST('192.168.0.0/16' AS varchar(100)) as network 
+    UNION SELECT CAST('192.168.0.1/16' AS varchar(100)) as network 
+
+) AS tempT
+
+
+-- https://www.postgresql.org/docs/8.2/static/functions-net.html
+
+
+-- Get CIDR from range:
+SELECT inet_merge('192.168.0.0', '192.168.128.255');
+ 

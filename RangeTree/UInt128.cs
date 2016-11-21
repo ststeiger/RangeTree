@@ -83,6 +83,28 @@ namespace MB.Algodat
         }
 
 
+        public string ToIpV6()
+        {
+            string ipString = "";
+            //we display in total 4 parts for every long
+
+            ulong crtLong = this.Low;
+            for (int i = 0; i < 4; ++i)
+            {
+                ipString = (crtLong & 0xFFFF).ToString("x04") + (ipString == string.Empty ? "" : ":" + ipString);
+                crtLong = crtLong >> 16;
+            } // Next j 
+
+            crtLong = this.High;
+            for (int i = 0; i < 4; ++i)
+            {
+                ipString = (crtLong & 0xFFFF).ToString("x04") + (ipString == string.Empty ? "" : ":" + ipString);
+                crtLong = crtLong >> 16;
+            } // Next j 
+            return ipString;
+        } // End Function ToIpV6 
+
+
         public bool Equals(UInt128 other)
         {
             return this.High == other.High && this.Low == other.Low;
@@ -163,17 +185,38 @@ namespace MB.Algodat
         public ulong High;
         public ulong Low;
 
+
+        public static UInt128 MaxValue
+        {
+            get
+            {
+                return new UInt128(ulong.MaxValue, ulong.MaxValue);
+            }
+        }
+
+
+        public static UInt128 MinValue
+        {
+            get
+            {
+                return new UInt128(ulong.MinValue, ulong.MinValue);
+            }
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator System.UInt64(UInt128 value)
         {
             return value.Low;
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator UInt128(System.UInt64 value)
         {
             return new UInt128(value);
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetMultiplyUInt64(ref System.UInt64 left, ref System.UInt64 right)
@@ -198,6 +241,7 @@ namespace MB.Algodat
             High = high;
             Low = low;
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddMultiplyUInt64(ref System.UInt64 left, ref System.UInt64 right)
@@ -249,6 +293,7 @@ namespace MB.Algodat
             return new UInt128(high, low);
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(UInt128 n)
         {
@@ -256,6 +301,7 @@ namespace MB.Algodat
             High = High + n.High + c;
             Low = Low + n.Low;
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(System.UInt64 n)
@@ -269,23 +315,54 @@ namespace MB.Algodat
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator == (UInt128 lhs, UInt128 rhs)
         {
-            bool status = false;
-            if (lhs.High == rhs.High && lhs.Low == rhs.Low)
-            {
-                status = true;
-            }
-            return status;
+            return (lhs.High == rhs.High && lhs.Low == rhs.Low);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(UInt128 lhs, uint rhs)
+        {
+            if (lhs.High != 0)
+                return false;
+
+            return (lhs.Low == rhs);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(UInt128 lhs, ulong rhs)
+        {
+            if (lhs.High != 0)
+                return false;
+
+            return (lhs.Low == rhs);
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(UInt128 lhs, UInt128 rhs)
         {
-            bool status = false;
-            if (lhs.High != rhs.High || lhs.Low != rhs.Low)
-            {
-                status = true;
-            }
-            return status;
+            return (lhs.High != rhs.High || lhs.Low != rhs.Low);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(UInt128 lhs, uint rhs)
+        {
+            if (lhs.High != 0)
+                return true;
+
+            return (lhs.Low != rhs);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(UInt128 lhs, ulong rhs)
+        {
+            if (lhs.High != 0)
+                return true;
+
+            return (lhs.Low != rhs);
         }
 
 
@@ -295,11 +372,9 @@ namespace MB.Algodat
             if (lhs.High < rhs.High)
                 return true;
 
-            if (lhs.High == rhs.High && lhs.Low < rhs.Low)
-                return true;
-
-            return false;
+            return (lhs.High == rhs.High && lhs.Low < rhs.Low);
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >(UInt128 lhs, UInt128 rhs)
@@ -307,11 +382,9 @@ namespace MB.Algodat
             if (lhs.High > rhs.High)
                 return true;
 
-            if (lhs.High == rhs.High && lhs.Low > rhs.Low)
-                return true;
-
-            return false;
+            return (lhs.High == rhs.High && lhs.Low > rhs.Low);
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <=(UInt128 lhs, UInt128 rhs)
@@ -379,6 +452,7 @@ namespace MB.Algodat
             }
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator +(UInt128 left, System.UInt64 right)
         {
@@ -389,6 +463,7 @@ namespace MB.Algodat
             return new UInt128(high, low);
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator +(UInt128 left, UInt128 right)
         {
@@ -398,6 +473,7 @@ namespace MB.Algodat
 
             return new UInt128(high, low);
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator >>(UInt128 value, int shift)
@@ -416,6 +492,7 @@ namespace MB.Algodat
             }
             return shifted;
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator <<(UInt128 value, int shift)
@@ -436,6 +513,7 @@ namespace MB.Algodat
             return shifted;
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator &(UInt128 left, System.UInt64 right)
         {
@@ -445,6 +523,7 @@ namespace MB.Algodat
 
             return result;
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator &(UInt128 left, UInt128 right)
@@ -456,6 +535,7 @@ namespace MB.Algodat
             return result;
         }
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator |(UInt128 left, UInt128 right)
         {
@@ -464,5 +544,29 @@ namespace MB.Algodat
             result.Low |= right.Low;
             return result;
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator ^(UInt128 left, UInt128 right)
+        {
+            UInt128 result = left;
+            result.High ^= right.High;
+            result.Low ^= right.Low;
+            return result;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator ~(UInt128 left)
+        {
+            UInt128 result = left;
+            result.High = ~result.High;
+            result.Low = ~result.Low;
+            return result;
+        }
+
+
     }
+
+
 }

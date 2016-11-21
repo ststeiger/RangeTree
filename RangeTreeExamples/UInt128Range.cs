@@ -68,7 +68,7 @@ namespace RangeTreeExamples
             if (obj.GetType() != this.GetType())
                 return false;
 
-            return this.Equals((HugeRangeItem)obj);
+            return this.Equals((UInt128RangeItem)obj);
         }
 
 
