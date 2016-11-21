@@ -100,6 +100,9 @@
   <ItemGroup>
     <Content Include="GeoLite\COPYRIGHT.txt" />
     <Content Include="GeoLite\CSV_20161101.txt" />
+    <Content Include="GeoLite\GeoIP_04_Indices.sql" />
+    <Content Include="GeoLite\GeoIP_05_IpConversionFunctions.sql" />
+    <Content Include="GeoLite\GeoIP_06_TestQuery.sql" />
     <Content Include="GeoLite\GeoIP_CSV_BulkInsert.sql" />
     <Content Include="GeoLite\GeoIP_02_locations_temp_INSERT.sql" />
     <Content Include="GeoLite\GeoIP_01_Schema_Country.sql" />
