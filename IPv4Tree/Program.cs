@@ -24,7 +24,9 @@ namespace IPv4Tree
             Application.Run(new Form1());
 #endif 
 
-            GeoLiteSqlServerImporter.ImportBlocks();
+            // GeoLiteSqlServerImporter.ImportBlocks();
+
+            SimpleBinaryTreeExample.Test2();
 
             uint ipv4 = IPv4Helper.IP2num("88.84.21.77");
             LookupIP(ipv4);
@@ -47,7 +49,7 @@ namespace IPv4Tree
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 100; ++i)
             {
                 System.Collections.Generic.List<IPv4Item> results = tree.Query(ipv4);
                 // PrintQueryResult("test", results);
