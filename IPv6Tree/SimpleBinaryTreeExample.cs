@@ -1,5 +1,8 @@
 ﻿
-namespace IPv4Tree
+using MB.Algodat;
+
+
+namespace IPv6Tree
 {
 
 
@@ -44,7 +47,6 @@ namespace IPv4Tree
             );
 
         }
-
 
 
         public RangeGroup<T> Find(T number)
@@ -120,33 +122,30 @@ namespace IPv4Tree
 
         public static void Test2()
         {
-            System.Collections.Generic.List<IPv4Item> ls = GeoLiteImporter.DirectImport();
+            System.Collections.Generic.List<UInt128RangeItem> ls = GeoLiteImporter.DirectImport();
 
-            System.Collections.Generic.List<RangeGroup<uint>> lsRangeGroups = new System.Collections.Generic.List<RangeGroup<uint>>();
+            System.Collections.Generic.List<RangeGroup<UInt128>> lsRangeGroups = new System.Collections.Generic.List<RangeGroup<UInt128>>();
             // Populating the list items here
-            foreach (IPv4Item thisItem in ls)
+            foreach (UInt128RangeItem thisItem in ls)
             {
-                lsRangeGroups.Add(new RangeGroup<uint> { RangeGroupId = thisItem.Text, Low = thisItem.Range.From, High = thisItem.Range.To });
-            } // Next thisItem 
+                lsRangeGroups.Add(new RangeGroup<UInt128> { RangeGroupId = thisItem.Text, Low = thisItem.Range.From, High = thisItem.Range.To });
+            }
 
-            RangeGroupFinder<uint> finder = new RangeGroupFinder<uint>(lsRangeGroups);
+            RangeGroupFinder<UInt128> finder = new RangeGroupFinder<UInt128>(lsRangeGroups);
 
-
-
-            // uint ipv4 = IPv4Helper.IP2num("46.14.227.129");
-            // uint ipv4 = IPv4Helper.IP2num("47.238.70.238");
-            // uint ipv4 = IPv4Helper.IP2num("107.129.245.112");
-            uint ipv4 = IPv4Helper.IP2num("244.1.168.2");
+            // UInt128 ipv6 = IPv6Helper.IP2num("a374:fc53:b27e:32d6:f1b7:e1ff:a829:cdc5");
+            UInt128 ipv6 = IPv6Helper.IP2num("2607:f0d0:1002:0051:0000:0000:0000:0004");
             
             
+
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            RangeGroup<uint> rg1 = finder.Find(ipv4);
+            RangeGroup<UInt128> rg1 = finder.Find(ipv6);
             sw.Stop();
 
             System.Console.WriteLine(sw.Elapsed);
             System.Console.WriteLine(rg1);
-        } // End Sub Test 
+        } // End Sub Test2 
 
 
         private static System.Collections.Generic.List<RangeGroup<uint>> GenerateRangeGroup()

@@ -24,10 +24,12 @@ namespace IPv6Tree
             Application.Run(new Form1());
 #endif 
 
-            uint ipv4 = IPv4Helper.IP2num("88.84.21.77");
-            UInt128 ipv6 = new UInt128(0, ipv4);
+            // uint ipv4 = IPv4Helper.IP2num("188.31.220.221");
+            // UInt128 ipv6 = new UInt128(0, ipv4);
+            SimpleBinaryTreeExample.Test2();
 
-            // UInt128 ipv6 = IPv6Helper.IP2num("2607:f0d0:1002:0051:0000:0000:0000:0004");
+
+            UInt128 ipv6 = IPv6Helper.IP2num("2607:f0d0:1002:0051:0000:0000:0000:0004");
             LookupIP(ipv6);
         }
 

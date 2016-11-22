@@ -43,9 +43,9 @@ namespace RangeTreeExamples
     class Program
     {
 
+
         static void Main(string[] args)
         {
-            SimpleBinaryTreeExample.Test();
             TreeExample1();
             TreeExample2();
             TreeExample3();
