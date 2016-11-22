@@ -74,4 +74,10 @@ ALTER TABLE geoip.geoip_blocks_temp
 
 UPDATE geoip.geoip_blocks_temp SET lower_boundary = host(  network::inet )
 UPDATE geoip.geoip_blocks_temp SET upper_boundary = host( broadcast( network::inet ) )
+
+
+UPDATE geoip.geoip_blocks_temp SET lower_boundary_int = (host(network::inet)::inet - '0.0.0.0'::inet)::bigint
+UPDATE geoip.geoip_blocks_temp SET upper_boundary_int = (host(broadcast(network::inet))::inet - '0.0.0.0'::inet)::bigint
+
+
 */
