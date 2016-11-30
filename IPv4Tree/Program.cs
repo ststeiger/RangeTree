@@ -26,6 +26,10 @@ namespace IPv4Tree
 
             // GeoLiteSqlServerImporter.ImportBlocks();
 
+            // UInt128 myuint = new UInt128("123456789101112131415161718");
+            // System.Console.WriteLine(myuint.ToString());
+
+
             SimpleBinaryTreeExample.Test2();
 
             uint ipv4 = IPv4Helper.IP2num("88.84.21.77");
